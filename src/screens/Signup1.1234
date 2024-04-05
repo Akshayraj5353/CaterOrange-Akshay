@@ -1,0 +1,442 @@
+import React, { useState, useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+// import GoogleLogin from "react-google-login";
+//  
+// import {
+//   signUpAction,
+//   OtpEntry,
+//   socialSignUpAction,
+//   requestOTPSuccessful,
+// } from "../../redux/actions/global-actions";
+// import firebase from "../../services/firebase-services";
+import { Modal } from "react-bootstrap";
+// import OTPInput from "../../components/lib";
+// import Header from "./header";
+// import Footer from "./footer";
+// import { CLIENT_ID } from "../../constants/strings";
+import {
+  isStrongPassword,
+  isValidPhoneNumber,
+  isValidEmail,
+} from "../../helpers/validation-helpers";
+
+const useStyles = styled((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: "#8F5E99",
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+function SignUp() {
+  const classes = useStyles();
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [Mobile, setMobile] = useState("");
+  const [accountType, setAccountType] = useState("");
+  const [show, setShow] = useState(false);
+  const [submit, setSubmit] = useState(false);
+
+  const mobileErr = false;
+  const emailErr = false;
+
+  let values = {};
+
+  const handleChange = (e) => {
+    setAccountType(e.target.value);
+  };
+
+  // const responseGoogle = (response) => {
+  //   let email = response.profileObj.email;
+  //   let Firstname = response.profileObj.givenName;
+  //   let Lastname = response.profileObj.familyName;
+  //   const values = {
+  //     email,
+  //     accountType,
+  //     signUpType: "SocialLogin",
+  //     Firstname,
+  //     Lastname,
+  //   };
+  //   socialSignUpAction(values);
+  // };
+
+  // const responseGoogleFail = (response) => {
+  //   // console.log(response);
+  //   alert("Failed");
+  // };
+
+  // useEffect(() => {
+  //   signUpReducer.requestOTPSuccessful &&
+  //     setTimeout(() => {
+  //       handleShow();
+  //     }, 2000);
+  // });
+
+  // const handleShow = () => setShow(true);
+  // const handleClose = () => {
+  //   requestOTPSuccessful(false);
+  //   setShow(false);
+  // };
+
+  const isStrong = isStrongPassword(Password) !== null;
+  const isValidNum = isValidPhoneNumber(Mobile) !== null;
+  const isValidE = isValidEmail(Email) !== null;
+
+  // useEffect(() => {
+  //   if (!window?.appVerifier) {
+  //     window.appVerifier = new firebase.auth.RecaptchaVerifier(
+  //       "recaptcha-container",
+  //       {
+  //         size: "invisible",
+  //       }
+  //     );
+  //   }
+  // }, [window]);
+
+  function onPressSubmit(signUpType) {
+    // console.log(signUpType);
+    setSubmit(true);
+    if (
+      Email &&
+      Password &&
+      Mobile &&
+      accountType &&
+      signUpType &&
+      !isStrong &&
+      !isValidNum
+    ) {
+      values = {
+        Email,
+        Password,
+        Mobile,
+        accountType,
+        signUpType,
+        appVerifier: window.appVerifier,
+      };
+      console.log("Signup data:", values);
+      signUpAction(values);
+    }
+  }
+
+  // authToken && history.push("/");
+
+  // async function onOTPChange(OTP) {
+  //   const user = {
+  //     Email,
+  //     Password,
+  //     Mobile,
+  //     AccountType: accountType,
+  //   };
+  //   await OtpEntry(OTP, confirm, user);
+  // }
+
+  // const OtpInputCard = ({ title, resendOTP, ...rest }) => {
+  //   return (
+  //     <div
+  //       style={{
+  //         padding: 12,
+  //       }}
+  //     >
+  //       <div style={{ marginBottom: 12 }}>{title}</div>
+  //       <OTPInput {...rest} />
+  //     </div>
+  //   );
+  // };
+
+  // function Example() {
+  //   // const [OTP, setOTP] = useState("");
+  //   return (
+  //     <>
+  //       <Modal show={show} onHide={handleClose}>
+  //         <Modal.Header closeButton>
+  //           <Modal.Title>Confirm OTP</Modal.Title>
+  //         </Modal.Header>
+  //         {/* <Modal.Body>
+  //           <div>
+  //             <OtpInputCard
+  //               // autoFocus
+  //               OTPLength={6}
+  //               otpType="number"
+  //               disabled={false}
+  //               onChange={setOTP}
+  //               value={OTP}
+  //               // secure
+  //             />
+  //           </div>
+  //         </Modal.Body> */}
+  //         <Modal.Footer>
+  //           <Button
+  //             variant="outlined"
+  //             onClick={(e) => {
+  //               e.preventDefault();
+  //               if (OTP) {
+  //                 onOTPChange(OTP);
+  //               } else {
+  //                 alert("Please enter OTP");
+  //               }
+  //             }}
+  //           >
+  //             Confirm OTP
+  //           </Button>
+  //         </Modal.Footer>
+  //       </Modal>
+  //     </>
+  //   );
+  // }
+
+  return (
+    <div>
+      {/* <Header noSearch noCart noCategory history={history} /> */}
+      <Container
+        component="main"
+        maxWidth="xs"
+        style={{ marginTop: 120, marginBottom: 50 }}
+      >
+        <CssBaseline />
+        {/* <Example /> */}
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  error={emailErr || (submit && isValidE)}
+                  helperText={
+                    !emailErr
+                      ? submit && isValidEmail(Email)
+                      : "Email Id already exists"
+                  }
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="email"
+                  label="email"
+                  type="email"
+                  id="email"
+                  autoComplete="email"
+                  value={Email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  error={submit && isStrong}
+                  helperText={submit && isStrongPassword(Password)}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={Password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  error={mobileErr || (submit && isValidNum)}
+                  helperText={
+                    !mobileErr
+                      ? submit && isValidPhoneNumber(Mobile)
+                      : "Mobile Number already exists"
+                  }
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="mobile number"
+                  label="mobile number"
+                  type="number"
+                  id="mobile number"
+                  autoComplete="mobile number"
+                  value={Mobile}
+                  onChange={(e) => setMobile(e.target.value.toString())}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <div align="center">
+                  <input
+                    required
+                    type="radio"
+                    value="Buyer"
+                    id="Buyer"
+                    onChange={handleChange}
+                    name="type"
+                  />
+                  &nbsp;
+                  <label htmlFor="Buyer" style={{ paddingRight: 100 }}>
+                    Buyer
+                  </label>
+                  <input
+                    type="radio"
+                    value="Seller"
+                    id="Seller"
+                    onChange={handleChange}
+                    name="type"
+                  />
+                  &nbsp;
+                  <label htmlFor="Seller">Seller</label>
+                </div>
+                <div align="center">
+                  {submit && accountType === "" ? (
+                    <p style={{ color: "red" }}>Please select Account Type</p>
+                  ) : null}
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              id="recaptcha-container"
+              style={{ backgroundColor: "#8F5E99", color: "white" }}
+              className={classes.submit}
+              onClick={(e) => {
+                e.preventDefault();
+                onPressSubmit("Email");
+              }}
+            >
+              CREATE ACCOUNT
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/SignIn" variant="body2">
+                  {"Already have an account? Sign in"}
+                </Link>
+              </Grid>
+            </Grid>
+            <hr
+              style={{
+                backgroundColor: "black",
+                height: 1,
+                marginBottom: 20,
+              }}
+            />
+            <Grid item xs={12}>
+              <div align="center">
+                <input
+                  required
+                  type="radio"
+                  value="Buyer"
+                  id="S-Buyer"
+                  onChange={handleChange}
+                  name="type"
+                />
+                &nbsp;
+                <label htmlFor="Buyer" style={{ paddingRight: 100 }}>
+                  Buyer
+                </label>
+                <input
+                  type="radio"
+                  value="Seller"
+                  id="S-Seller"
+                  onChange={handleChange}
+                  name="type"
+                />
+                &nbsp;
+                <label htmlFor="Seller">Seller</label>
+              </div>
+            </Grid>
+            {/* <GoogleLogin
+              clientId={CLIENT_ID}
+              render={(renderProps) => (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  style={{ marginBottom: 10, backgroundColor: "#DD4B39" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (accountType) {
+                      renderProps.onClick();
+                    } else {
+                      alert("Please Select Account Type");
+                    }
+                  }}
+                >
+                  <ion-icon
+                    size="small"
+                    style={{ paddingRight: 40 }}
+                    name="logo-google"
+                  ></ion-icon>
+                  Sign Up with Google
+                </Button>
+              )}
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogleFail}
+              cookiePolicy={"single_host_origin"}
+              // isSignedIn={true}
+            /> */}
+          </form>
+        </div>
+      </Container>
+      {/* <Footer small={true} /> */}
+    </div>
+  );
+}
+
+const mapStateToProps = (state) => {
+  return {
+    signUpReducer: state.signUpReducer,
+    confirm: state.signUpReducer.confirmation,
+    authToken: state.signUpReducer.authToken,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signUpAction: (values) => {
+      console.log("Signup data:", values);
+      dispatch(signUpAction(values));
+    },
+    socialSignUpAction: (values) => {
+      dispatch(socialSignUpAction(values));
+    },
+    OtpEntry: (OTP, confirm, user) => {
+      dispatch(OtpEntry(OTP, confirm, user));
+    },
+    requestOTPSuccessful: (bool) => {
+      dispatch(requestOTPSuccessful(bool));
+    },
+  };
+};
+
+export default SignUp;
